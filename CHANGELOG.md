@@ -2,6 +2,13 @@
 
 All notable changes to the SNKRS Architectural e-magazine.
 
+## [0.15.0] - 2026-11-23
+### Added
+- Subtle staggered fade-in on the gallery title slide: label, name, description
+  and prompt each rise 9px over 0.5s, 70ms apart. Scoped to `.film.go`, so with
+  the trigger absent the text renders at full opacity rather than being stuck
+  invisible, and the existing reduced-motion rule collapses it to instant.
+
 ## [0.14.0] - 2026-11-23
 ### Changed
 - Plate captions moved back below the image.

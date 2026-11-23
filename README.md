@@ -21,35 +21,16 @@ plates/                 Gallery 01 plates (plate-01.jpg … plate-39.jpg)
 plates2/                Gallery 02 plates, plus cover.jpg
 plates3/                Gallery 03 plates
 hero-visual-archive.jpg cover hero
-build-pages.sh          builds docs/ for GitHub Pages
+build-pages.sh          builds docs/, a standalone copy of the page
 ```
 
 No build step, no dependencies, no framework. The only external request is a
 Google Fonts stylesheet.
 
-## Hosting on GitHub Pages
-
-`index.html` is authored for Claude Artifacts, which wraps it in a document
-shell (doctype, charset, viewport meta, a small reset) when publishing. Served
-raw it would render in **quirks mode with no viewport meta**, so mobile would
-not scale. `build-pages.sh` adds an equivalent shell:
-
-```sh
-./build-pages.sh          # writes docs/ (~9.7 MB)
-```
-
-Then in the repo: **Settings → Pages → Source: Deploy from a branch**, branch
-`main`, folder `/docs`.
-
-Notes:
-
-- Every path in the page is relative, so it works from a project subpath
-  (`username.github.io/snkrs-emagazine/`) as well as a custom domain.
-- `docs/.nojekyll` keeps Pages from running the files through Jekyll.
-- ~9.7 MB total, against a 1 GB soft limit and 100 MB per file. Fine.
-- A free Pages site must be in a public repo. Private repos need a paid plan.
-- Re-run `build-pages.sh` after editing `index.html`; `docs/` is generated and
-  should not be edited directly.
+`index.html` is authored for Claude Artifacts, which supplies the document
+shell (doctype, charset, viewport meta, a small reset) when publishing. Run
+`./build-pages.sh` to produce `docs/`, a self-contained copy with that shell
+added, for serving anywhere static.
 
 ## Before publishing it publicly
 

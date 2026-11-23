@@ -133,6 +133,13 @@ h1,h2,h3{font-family:var(--d);text-wrap:balance;margin:0}
 .film.go .f-stage img,.film.go .f-head p{animation:plate .5s cubic-bezier(.22,.7,.2,1) both}
 @keyframes plate{from{opacity:0;transform:translateX(var(--dx,26px)) scale(.985)}
   to{opacity:1;transform:none}}
+/* gallery title slide: a short staggered rise, label through to the prompt */
+.film.go .f-title>*{animation:riseIn .5s cubic-bezier(.22,.7,.2,1) both}
+.film.go .f-title>*:nth-child(1){animation-delay:.05s}
+.film.go .f-title>*:nth-child(2){animation-delay:.12s}
+.film.go .f-title>*:nth-child(3){animation-delay:.19s}
+.film.go .f-title>*:nth-child(4){animation-delay:.26s}
+@keyframes riseIn{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
 .f-zone{position:absolute;top:0;bottom:0;width:34%;border:0;background:none;cursor:pointer;
   z-index:2;padding:0;color:var(--film-acc);opacity:0;transition:opacity .2s}
 .f-zone.l{left:0}.f-zone.r{right:0}
