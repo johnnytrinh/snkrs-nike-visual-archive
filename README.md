@@ -16,12 +16,12 @@ archival plates with their captions as published.
 ## Layout
 
 ```
-index.html              the whole magazine: markup, styles, data, behaviour
-plates/                 Gallery 01 plates (plate-01.jpg … plate-39.jpg)
-plates2/                Gallery 02 plates, plus cover.jpg
-plates3/                Gallery 03 plates
-hero-visual-archive.jpg cover hero
-build-pages.sh          builds docs/, a standalone copy of the page
+index.html                      the whole magazine: markup, styles, data, behaviour
+images/architectural/           Gallery 01 plates (plate-01.jpg … plate-39.jpg)
+images/merchandise/             Gallery 02 plates, plus cover.jpg
+images/graphics/                Gallery 03 plates
+images/hero-visual-archive.jpg  cover hero
+build-pages.sh                  builds docs/, a standalone copy of the page
 ```
 
 No build step, no dependencies, no framework. The only external request is a

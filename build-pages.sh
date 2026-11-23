@@ -45,8 +45,7 @@ with open('docs/index.html', 'a') as f:
     f.write('\n</body>\n</html>\n')
 PY
 
-cp -R plates plates2 plates3 docs/
-cp hero-visual-archive.jpg docs/
+cp -R images docs/
 touch docs/.nojekyll   # serve the files as-is, no Jekyll processing
 
 echo "built docs/ ($(du -sh docs | cut -f1))"

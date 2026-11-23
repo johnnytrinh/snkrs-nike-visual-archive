@@ -2,6 +2,14 @@
 
 All notable changes to the SNKRS Architectural e-magazine.
 
+## [0.16.0] - 2026-11-23
+### Changed
+- Plates moved under a single `images/` folder, named for their galleries:
+  `plates/` to `images/architectural/`, `plates2/` to `images/merchandise/`,
+  `plates3/` to `images/graphics/`. The hero moved to `images/` too. Gallery
+  `dir` and `cover` values, the hero `src`, the build script and the README
+  layout all follow; the old published paths were retired from the artifact.
+
 ## [0.15.0] - 2026-11-23
 ### Added
 - Subtle staggered fade-in on the gallery title slide: label, name, description
