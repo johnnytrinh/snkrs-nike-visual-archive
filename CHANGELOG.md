@@ -2,6 +2,12 @@
 
 All notable changes to the SNKRS Architectural e-magazine.
 
+## [0.16.1] - 2026-11-23
+### Removed
+- The red rule above the "By Evan Collins" byline (a `border-top` on `.byline`,
+  not an `<hr>`). Its top padding went with it and the margin was trimmed
+  slightly so the spacing holds.
+
 ## [0.16.0] - 2026-11-23
 ### Changed
 - Plates moved under a single `images/` folder, named for their galleries:
