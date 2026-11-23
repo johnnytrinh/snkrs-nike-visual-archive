@@ -2,6 +2,13 @@
 
 All notable changes to the SNKRS Architectural e-magazine.
 
+## [0.16.2] - 2026-11-23
+### Changed
+- README simplified: title is now "SNKRS Nike Visual Archive (Visual POC)",
+  with a proof-of-concept description and the live GitHub Pages URL. The plate
+  table and layout sections are gone, and the publishing note is now "All
+  Rights to Nike" carrying the source URL. The captions line stays.
+
 ## [0.16.1] - 2026-11-23
 ### Removed
 - The red rule above the "By Evan Collins" byline (a `border-top` on `.byline`,
