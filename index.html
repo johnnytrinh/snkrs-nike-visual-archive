@@ -113,8 +113,8 @@ h1,h2,h3{font-family:var(--d);text-wrap:balance;margin:0}
 .f-prog i.on{background:var(--film-acc)}
 
 .f-stage{flex:1;min-height:0;position:relative;overflow:hidden;touch-action:pan-y pinch-zoom;
-  display:flex;align-items:flex-start;justify-content:center;
-  padding:clamp(4px,.8vw,10px) clamp(14px,3vw,44px) clamp(14px,2.6vw,34px)}
+  display:flex;align-items:flex-end;justify-content:center;
+  padding:clamp(14px,2.4vw,30px) clamp(14px,3vw,44px) clamp(4px,.8vw,10px)}
 .f-stage img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;
   box-shadow:0 30px 80px -30px #000}
 .film.go .f-stage img,.film.go .f-head p{animation:plate .5s cubic-bezier(.22,.7,.2,1) both}
@@ -133,8 +133,8 @@ h1,h2,h3{font-family:var(--d);text-wrap:balance;margin:0}
 .f-zone.l span{left:max(1.2rem,env(safe-area-inset-left,0px))}
 .f-zone.r span{right:max(1.2rem,env(safe-area-inset-right,0px))}
 .f-head{flex:none;min-height:0;
-  padding:clamp(1.5rem,3.2vw,2.4rem) max(16px,env(safe-area-inset-right,0px))
-          clamp(.55rem,1.2vw,.85rem) max(16px,env(safe-area-inset-left,0px))}
+  padding:clamp(1.1rem,2.4vw,1.7rem) max(16px,env(safe-area-inset-right,0px))
+          clamp(1rem,2.2vw,1.5rem) max(16px,env(safe-area-inset-left,0px))}
 .f-head p{margin:0;font-size:clamp(1rem,1.7vw,1.25rem);font-weight:400;
   line-height:1.5;letter-spacing:normal;color:var(--film-fg);max-width:60em}
 .f-head:empty{display:none}
@@ -166,9 +166,9 @@ h1,h2,h3{font-family:var(--d);text-wrap:balance;margin:0}
   .f-zone.l span{left:max(.6rem,env(safe-area-inset-left,0px))}
   .f-zone.r span{right:max(.6rem,env(safe-area-inset-right,0px))}
   .f-rail{display:none}
-  .f-stage{padding:4px 10px 12px}
+  .f-stage{padding:12px 10px 4px}
   .f-head p{font-size:1rem}
-  .f-head{padding-block:1.1rem .5rem}
+  .f-head{padding-block:.85rem .9rem}
 }
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.001ms!important;transition-duration:.001ms!important}
@@ -216,12 +216,13 @@ h1,h2,h3{font-family:var(--d);text-wrap:balance;margin:0}
     <span class="f-name" id="fName"></span>
     <button class="fbtn" id="fClose">Return Home</button>
   </div>
-  <div class="f-head" id="fHead"></div>
 
   <div class="f-stage" id="fStage">
     <button class="f-zone l" id="zL" aria-label="Previous plate"><span>←</span></button>
     <button class="f-zone r" id="zR" aria-label="Next plate"><span>→</span></button>
   </div>
+
+  <div class="f-head" id="fHead"></div>
 
   <div class="f-prog" id="fProg" aria-hidden="true"></div>
 

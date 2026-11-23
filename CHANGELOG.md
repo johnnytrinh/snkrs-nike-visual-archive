@@ -2,6 +2,14 @@
 
 All notable changes to the SNKRS Architectural e-magazine.
 
+## [0.14.0] - 2026-11-23
+### Changed
+- Plate captions moved back below the image.
+- The plate is now bottom-aligned in the stage rather than top-aligned, so the
+  caption stays tight under it; slack falls between the top bar and the plate
+  instead of between plate and caption. Stage and caption padding swapped to
+  match the new order.
+
 ## [0.13.0] - 2026-11-23
 ### Added
 - `build-pages.sh`, which builds a standalone `docs/` for GitHub Pages.
