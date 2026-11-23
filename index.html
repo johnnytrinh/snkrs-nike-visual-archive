@@ -1,0 +1,383 @@
+<title>SNKRS Architectural</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap">
+<style>
+/* Layout: a press sheet for the cover, a projection room for the galleries.
+   Ink on cool paper outside; full-bleed plates on black inside. */
+:root{
+  --paper:#F1F2EF; --paper-2:#E4E6E1; --ink:#11161C; --ink-2:#4F5863;
+  --rule:#C9CDC6; --accent:#D10015; --plate-bg:#DDE0DA; --shadow:rgba(17,22,28,.18);
+  /* projection room — fixed, both themes */
+  --film:#0A0C0F; --film-2:#141920; --film-fg:#F0F2EE; --film-dim:#9BA4AF;
+  --film-rule:#272E37; --film-acc:#FF3040;
+  /* Neue Haas Grotesk / Helvetica Now on nike.com; real Helvetica where the
+     viewer has it, Inter as the cross-platform stand-in. */
+  --sans:'Helvetica Neue',Helvetica,'Inter',Arial,sans-serif;
+  --d:var(--sans); --b:var(--sans); --m:var(--sans);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0C0F13; --paper-2:#14181E; --ink:#E7E9E4; --ink-2:#99A2AD;
+  --rule:#2A3139; --accent:#FF0017; --plate-bg:#171C22; --shadow:rgba(0,0,0,.55);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#0C0F13; --paper-2:#14181E; --ink:#E7E9E4; --ink-2:#99A2AD;
+  --rule:#2A3139; --accent:#FF0017; --plate-bg:#171C22; --shadow:rgba(0,0,0,.55);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--b);font-size:16px;line-height:1.5;
+  -webkit-font-smoothing:antialiased}
+body.reading{overflow:hidden}
+.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  max-width:1180px;margin:0 auto}
+h1,h2,h3{font-family:var(--d);text-wrap:balance;margin:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.mono{font-family:var(--m);font-size:.8rem;font-weight:500;letter-spacing:normal;
+  text-transform:uppercase;color:var(--ink-2)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------------- cover ---------------- */
+.mast{display:flex;align-items:center;gap:1rem;padding-block:1.2rem}
+.logo{display:block;height:42px;flex:none;color:inherit}
+.f-logo{cursor:pointer;background:none;border:0;padding:0}
+.logo svg{display:block;height:100%;width:auto}
+.mast .mono{text-align:right}
+.hero{position:relative;display:flex;align-items:flex-end;overflow:hidden;
+  min-height:clamp(380px,62vh,660px);background:#FF0017}
+.hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  object-position:center top;display:block}
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(0,0,0,.38) 0%,rgba(0,0,0,.10) 30%,
+    rgba(0,0,0,.28) 100%)}
+.hero-txt{position:relative;z-index:1;width:100%;color:#fff;
+  padding-top:clamp(2.4rem,7vw,3.6rem);padding-bottom:clamp(1.8rem,5vw,3.4rem);
+  background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.72) 9%,
+    rgba(0,0,0,.90) 38%,rgba(0,0,0,.96) 100%)}
+.hero h1{font-size:clamp(2.6rem,8.6vw,6rem);font-weight:700;line-height:1.05;
+  letter-spacing:normal;text-transform:uppercase;color:#fff;
+  text-shadow:0 2px 24px rgba(0,0,0,.5)}
+.dek{margin:1.1rem 0 0;font-size:clamp(1.05rem,2.1vw,1.45rem);max-width:48em;text-wrap:pretty;line-height:1.5;
+  color:#fff;font-weight:400;text-shadow:0 1px 14px rgba(0,0,0,.6)}
+.byline{margin:1.4rem 0 0;font-size:.95rem;font-weight:500;letter-spacing:normal;
+  text-transform:uppercase;color:#fff;display:inline-block;line-height:1.5;
+  border-top:2px solid #FF0017;padding-top:.7rem}
+.hero-txt .intro{max-width:44em;margin:1.3rem 0 0;font-size:clamp(.92rem,1.5vw,1.02rem);
+  color:#E8EAEC;line-height:1.5;text-shadow:0 1px 12px rgba(0,0,0,.7)}
+.contents{padding-block:2.6rem 3.4rem}
+.contents{padding-top:2.8rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(272px,1fr));
+  gap:1.7rem 1.4rem;list-style:none;padding:0;margin:0}
+.card{all:unset;display:grid;gap:.7rem;cursor:pointer;text-align:left;width:100%}
+.card .thumb{position:relative;background:var(--plate-bg);border:1px solid var(--rule);
+  aspect-ratio:4/3;overflow:hidden;max-width:100%}
+.card .thumb img{width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.card .cardhd{display:grid;gap:.3rem}
+.card .g-label{font-size:.82rem;font-weight:500;letter-spacing:normal;line-height:1.5;
+  text-transform:uppercase;color:var(--accent)}
+.card h2{font-size:1.5rem;font-weight:700;letter-spacing:normal;line-height:1.2;
+  text-transform:uppercase;font-family:var(--d)}
+.card .sub{font-size:.95rem;line-height:1.5;color:var(--ink-2);margin:0}
+.card .cta{font-family:var(--d);font-size:1.1rem;line-height:1;color:var(--accent)}
+.card:hover .thumb img,.card:focus-visible .thumb img{transform:scale(1.045)}
+.card:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.contents{padding-bottom:4rem}
+
+/* ---------------- projection room ---------------- */
+.film{position:fixed;inset:0;z-index:50;background:var(--film);color:var(--film-fg);
+  display:flex;flex-direction:column;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.film[hidden]{display:none!important}
+.film:focus{outline:none}
+.f-bar{flex:none;display:flex;align-items:center;gap:1rem;
+  padding:.75rem max(16px,env(safe-area-inset-right,0px)) .75rem max(16px,env(safe-area-inset-left,0px));
+  border-bottom:1px solid var(--film-rule)}
+.f-logo{display:block;height:26px;flex:none}
+.f-logo svg{display:block;height:100%;width:auto}
+.f-name{font-family:var(--d);font-weight:700;font-size:1rem;letter-spacing:normal;
+  text-transform:uppercase;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.f-name{margin-right:auto}
+.fbtn{font-family:var(--m);font-size:.8rem;font-weight:500;letter-spacing:normal;text-transform:uppercase;
+  background:none;border:1px solid var(--film-rule);color:var(--film-fg);
+  padding:.55em .9em;cursor:pointer}
+.fbtn:hover:not(:disabled){border-color:var(--film-fg);background:var(--film-2)}
+.fbtn:disabled{opacity:.35;cursor:default}
+.fbtn:focus-visible{outline:2px solid var(--film-acc);outline-offset:2px}
+.f-prog{flex:none;display:flex;gap:2px;
+  padding:clamp(.85rem,1.8vw,1.2rem) max(16px,env(safe-area-inset-right,0px))
+          clamp(.5rem,1vw,.75rem) max(16px,env(safe-area-inset-left,0px))}
+.f-prog i{flex:1;height:2px;background:var(--film-rule)}
+.f-prog i.on{background:var(--film-acc)}
+
+.f-stage{flex:1;min-height:0;position:relative;overflow:hidden;touch-action:pan-y pinch-zoom;
+  display:flex;align-items:flex-start;justify-content:center;
+  padding:clamp(4px,.8vw,10px) clamp(14px,3vw,44px) clamp(14px,2.6vw,34px)}
+.f-stage img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;
+  box-shadow:0 30px 80px -30px #000}
+.film.go .f-stage img,.film.go .f-head p{animation:plate .5s cubic-bezier(.22,.7,.2,1) both}
+@keyframes plate{from{opacity:0;transform:translateX(var(--dx,26px)) scale(.985)}
+  to{opacity:1;transform:none}}
+.f-zone{position:absolute;top:0;bottom:0;width:34%;border:0;background:none;cursor:pointer;
+  z-index:2;padding:0;color:var(--film-acc);opacity:0;transition:opacity .2s}
+.f-zone.l{left:0}.f-zone.r{right:0}
+.f-stage:hover .f-zone{opacity:.7}
+.f-zone:hover{opacity:1!important}
+.f-zone:focus-visible{opacity:1;outline:none}
+.f-zone:focus-visible span{outline:2px solid var(--film-acc);outline-offset:8px}
+.f-zone span{font-family:var(--d);font-size:2rem;font-weight:500;line-height:1;
+  position:fixed;top:50%;transform:translateY(-50%);display:block;
+  text-shadow:0 2px 12px rgba(0,0,0,.85);pointer-events:none}
+.f-zone.l span{left:max(1.2rem,env(safe-area-inset-left,0px))}
+.f-zone.r span{right:max(1.2rem,env(safe-area-inset-right,0px))}
+.f-head{flex:none;min-height:0;
+  padding:clamp(1.5rem,3.2vw,2.4rem) max(16px,env(safe-area-inset-right,0px))
+          clamp(.55rem,1.2vw,.85rem) max(16px,env(safe-area-inset-left,0px))}
+.f-head p{margin:0;font-size:clamp(1rem,1.7vw,1.25rem);font-weight:400;
+  line-height:1.5;letter-spacing:normal;color:var(--film-fg);max-width:60em}
+.f-head:empty{display:none}
+.f-rail{flex:none;display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;
+  padding:.6rem max(16px,env(safe-area-inset-left,0px)) .7rem;
+  border-top:1px solid var(--film-rule);scrollbar-width:thin}
+.f-rail button{flex:none;width:58px;height:44px;padding:0;border:1px solid var(--film-rule);
+  background:var(--film-2);cursor:pointer;overflow:hidden}
+.f-rail img{width:100%;height:100%;object-fit:cover;display:block;opacity:.45;transition:opacity .2s}
+.f-rail button[aria-current="true"]{border-color:var(--film-acc)}
+.f-rail button[aria-current="true"] img,.f-rail button:hover img{opacity:1}
+.f-rail button:focus-visible{outline:2px solid var(--film-acc);outline-offset:1px}
+
+/* gallery title slide */
+.f-title{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
+  padding:clamp(1.4rem,5vw,4rem);z-index:1;background:var(--film)}
+.f-title .n{font-size:clamp(.9rem,1.5vw,1.05rem);font-weight:500;line-height:1.5;
+  letter-spacing:normal;text-transform:uppercase;color:var(--film-acc)}
+.f-title h2{font-size:clamp(2rem,6.5vw,4.2rem);font-weight:700;line-height:1.1;
+  letter-spacing:normal;text-transform:uppercase;margin-top:.4rem}
+.f-title p{font-size:clamp(.98rem,1.6vw,1.1rem);max-width:40em;margin:1.2rem 0 0;color:var(--film-dim)}
+.f-title .hint{font-family:var(--m);font-size:.82rem;font-weight:500;letter-spacing:normal;text-transform:uppercase;
+  color:var(--film-acc);margin-top:1.6rem}
+
+@media (max-width:860px){.hero{min-height:clamp(320px,52vh,480px)}}
+@media (max-width:700px){
+  .f-zone{width:26%}
+  .f-zone span{font-size:1.6rem}
+  .f-zone.l span{left:max(.6rem,env(safe-area-inset-left,0px))}
+  .f-zone.r span{right:max(.6rem,env(safe-area-inset-right,0px))}
+  .f-rail{display:none}
+  .f-stage{padding:4px 10px 12px}
+  .f-head p{font-size:1rem}
+  .f-head{padding-block:1.1rem .5rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}
+</style>
+
+<!-- ======================= COVER ======================= -->
+<main id="cover">
+  <div class="wrap">
+    <header class="mast">
+      <a class="logo" href="#cover" aria-label="SNKRS — back to the top of the issue"><svg fill="#FF0017" fill-rule="nonzero" viewBox="0 0 50 34" role="img"><title>Nike SNKRS</title><path d="M13.3.728c-2.102 2.34-3 3.732-3.482 5.389-.44 1.512-.207 2.76.671 3.626.697.69 1.437.947 2.717.947 1.041 0 1.932-.17 3.237-.615.715-.238 23.795-9.812 23.952-9.93a.03.03 0 0 0 0-.045c-.012-.012-5.075 1.3-11.254 2.918-6.174 1.612-11.468 2.986-11.763 3.048-.816.17-2.152.157-2.73-.025a2.52 2.52 0 0 1-1.605-1.505c-.126-.308-.145-.477-.145-1.086.007-.897.17-1.499.722-2.628.207-.42.37-.784.357-.797-.018-.012-.32.307-.677.703zM3.79 16.713c-2.184.495-3.67 2.434-3.771 4.93-.05 1.193.182 2.083.765 2.987.308.458 1.286 1.436 1.945 1.938 1.148.872 1.462 1.293 1.399 1.876-.044.364-.232.621-.602.797-.897.445-2.183-.107-3.231-1.387l-.232-.282v5.213l.42.132c.853.27 1.13.301 2.622.301 1.337 0 1.475-.012 1.914-.144 1.324-.414 2.403-1.317 3.005-2.503.113-.22.257-.54.32-.722l.119-.332v1.8l.006 1.807h4.266l.013-3.914.019-3.915 1.505 3.896 1.512 3.902 1.832.019 1.832.012V16.75h-4.266l-.013 3.551-.018 3.545-1.004-3.545-1.004-3.55H8.469v4.811c-.006 4.8-.006 4.818-.125 4.492-.301-.84-.904-1.606-1.85-2.346-.371-.289-.885-.697-1.149-.904-.621-.49-.89-.878-.89-1.292 0-.264.03-.345.225-.552.257-.289.54-.402.991-.395.496.012 1.242.407 1.794.953l.44.433v-4.686l-.402-.163c-.847-.333-1.324-.427-2.359-.452-.677-.013-1.091.006-1.355.063zM45.056 16.744c-.25.063-.702.232-.997.383-.91.451-1.794 1.418-2.196 2.396-.088.22-.163.408-.175.414-.013.013-.12-.182-.239-.439-.728-1.562-2.164-2.428-4.435-2.679-.464-.056-2.096-.069-5.515-.056l-4.855.019-1.073 2.283-1.073 2.278-.019-2.297-.012-2.296h-4.392v16.374h4.392v-3.438l.006-3.431 1.324 3.431 1.33 3.438h8.318l.02-2.246c.006-1.23.006-2.704 0-3.274-.007-.571.012-.992.037-.942.025.05.564 1.525 1.198 3.275l1.148 3.18 2.641.032c1.45.02 3.194.05 3.877.076 1.105.031 1.286.018 1.788-.1a4.936 4.936 0 0 0 3.275-2.592c.377-.753.515-1.361.552-2.365.082-2.152-.552-3.319-2.647-4.893-1.468-1.098-1.788-1.638-1.35-2.259.44-.62 1.463-.583 2.366.088.376.276 1.085 1.004 1.085 1.11 0 .032.032.057.063.057.038 0 .063-.878.063-2.503V17.27l-.364-.163c-.715-.32-1.324-.433-2.553-.458-.948-.019-1.205-.006-1.588.094zM31.041 27.773l-.018 3.375-1.487-3.588c-.822-1.97-1.493-3.608-1.493-3.639 0-.025.67-1.443 1.486-3.143l1.494-3.1.018 3.363c.007 1.851.007 4.881 0 6.732zm5.603-7.215c.608.345.928 1.035.853 1.87-.088 1.091-.778 1.844-1.688 1.85h-.364v-3.971l.433.032c.333.025.515.081.766.22zm6.198 4.869c.295.307.822.784 1.167 1.06.345.276.759.608.928.746.954.803.703 1.939-.477 2.152-.771.138-2.139-.615-2.766-1.524-.1-.145-.207-.257-.232-.257-.032 0-.063.614-.07 1.36l-.018 1.356-.96-1.989c-.533-1.098-.954-1.995-.941-2.001.652-.326.834-.458 1.248-.86.377-.37.534-.59.747-1.016l.27-.546.282.477c.157.27.515.722.822 1.042z"></path></svg></a>
+    </header>
+
+  </div>
+
+  <section class="hero">
+    <img class="hero-bg" src="hero-visual-archive.jpg" alt="" width="1280" height="1597">
+    <div class="hero-txt">
+      <div class="wrap">
+        <h1>Nike Visual Archive</h1>
+        <p class="dek">A deep dive down the rabbit hole of Nike’s visual history.</p>
+        <p class="byline">By Evan Collins</p>
+      <p class="intro">Evan Collins has spent years naming the parts of design history the
+        textbooks skipped. An architect and design archivist, he founded the Consumer
+        Aesthetics Research Institute (CARI), an online research community building a visual
+        lexicon for the look of recent decades: the storefronts, logos, packaging, interiors
+        and screen graphics that shaped everyday life and rarely got written down. For SNKRS,
+        Evan scoured primary sources to assemble three image libraries showcasing Nike’s
+        heritage of design innovation from the late 1980s to the late 2000s.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <section class="contents">
+      <ul class="grid" id="toc"></ul>
+    </section>
+  </div>
+</main>
+
+<!-- ======================= SLIDESHOW ======================= -->
+<div class="film" id="film" hidden tabindex="-1" role="dialog" aria-modal="true" aria-label="Gallery slideshow">
+  <div class="f-bar">
+    <button type="button" class="f-logo" id="fHome" aria-label="SNKRS — return home"><svg fill="#FF0017" fill-rule="nonzero" viewBox="0 0 50 34" role="img"><title>Nike SNKRS</title><path d="M13.3.728c-2.102 2.34-3 3.732-3.482 5.389-.44 1.512-.207 2.76.671 3.626.697.69 1.437.947 2.717.947 1.041 0 1.932-.17 3.237-.615.715-.238 23.795-9.812 23.952-9.93a.03.03 0 0 0 0-.045c-.012-.012-5.075 1.3-11.254 2.918-6.174 1.612-11.468 2.986-11.763 3.048-.816.17-2.152.157-2.73-.025a2.52 2.52 0 0 1-1.605-1.505c-.126-.308-.145-.477-.145-1.086.007-.897.17-1.499.722-2.628.207-.42.37-.784.357-.797-.018-.012-.32.307-.677.703zM3.79 16.713c-2.184.495-3.67 2.434-3.771 4.93-.05 1.193.182 2.083.765 2.987.308.458 1.286 1.436 1.945 1.938 1.148.872 1.462 1.293 1.399 1.876-.044.364-.232.621-.602.797-.897.445-2.183-.107-3.231-1.387l-.232-.282v5.213l.42.132c.853.27 1.13.301 2.622.301 1.337 0 1.475-.012 1.914-.144 1.324-.414 2.403-1.317 3.005-2.503.113-.22.257-.54.32-.722l.119-.332v1.8l.006 1.807h4.266l.013-3.914.019-3.915 1.505 3.896 1.512 3.902 1.832.019 1.832.012V16.75h-4.266l-.013 3.551-.018 3.545-1.004-3.545-1.004-3.55H8.469v4.811c-.006 4.8-.006 4.818-.125 4.492-.301-.84-.904-1.606-1.85-2.346-.371-.289-.885-.697-1.149-.904-.621-.49-.89-.878-.89-1.292 0-.264.03-.345.225-.552.257-.289.54-.402.991-.395.496.012 1.242.407 1.794.953l.44.433v-4.686l-.402-.163c-.847-.333-1.324-.427-2.359-.452-.677-.013-1.091.006-1.355.063zM45.056 16.744c-.25.063-.702.232-.997.383-.91.451-1.794 1.418-2.196 2.396-.088.22-.163.408-.175.414-.013.013-.12-.182-.239-.439-.728-1.562-2.164-2.428-4.435-2.679-.464-.056-2.096-.069-5.515-.056l-4.855.019-1.073 2.283-1.073 2.278-.019-2.297-.012-2.296h-4.392v16.374h4.392v-3.438l.006-3.431 1.324 3.431 1.33 3.438h8.318l.02-2.246c.006-1.23.006-2.704 0-3.274-.007-.571.012-.992.037-.942.025.05.564 1.525 1.198 3.275l1.148 3.18 2.641.032c1.45.02 3.194.05 3.877.076 1.105.031 1.286.018 1.788-.1a4.936 4.936 0 0 0 3.275-2.592c.377-.753.515-1.361.552-2.365.082-2.152-.552-3.319-2.647-4.893-1.468-1.098-1.788-1.638-1.35-2.259.44-.62 1.463-.583 2.366.088.376.276 1.085 1.004 1.085 1.11 0 .032.032.057.063.057.038 0 .063-.878.063-2.503V17.27l-.364-.163c-.715-.32-1.324-.433-2.553-.458-.948-.019-1.205-.006-1.588.094zM31.041 27.773l-.018 3.375-1.487-3.588c-.822-1.97-1.493-3.608-1.493-3.639 0-.025.67-1.443 1.486-3.143l1.494-3.1.018 3.363c.007 1.851.007 4.881 0 6.732zm5.603-7.215c.608.345.928 1.035.853 1.87-.088 1.091-.778 1.844-1.688 1.85h-.364v-3.971l.433.032c.333.025.515.081.766.22zm6.198 4.869c.295.307.822.784 1.167 1.06.345.276.759.608.928.746.954.803.703 1.939-.477 2.152-.771.138-2.139-.615-2.766-1.524-.1-.145-.207-.257-.232-.257-.032 0-.063.614-.07 1.36l-.018 1.356-.96-1.989c-.533-1.098-.954-1.995-.941-2.001.652-.326.834-.458 1.248-.86.377-.37.534-.59.747-1.016l.27-.546.282.477c.157.27.515.722.822 1.042z"></path></svg></button>
+    <span class="f-name" id="fName"></span>
+    <button class="fbtn" id="fClose">Return Home</button>
+  </div>
+  <div class="f-head" id="fHead"></div>
+
+  <div class="f-stage" id="fStage">
+    <button class="f-zone l" id="zL" aria-label="Previous plate"><span>←</span></button>
+    <button class="f-zone r" id="zR" aria-label="Next plate"><span>→</span></button>
+  </div>
+
+  <div class="f-prog" id="fProg" aria-hidden="true"></div>
+
+  <div class="f-rail" id="fRail" aria-label="Plates in this gallery"></div>
+  <p class="sr" id="live" role="status" aria-live="polite"></p>
+</div>
+
+<script>
+var GALLERIES=[{"id": "architectural","n": 1,"name": "Architectural","dir": "plates","cover": "plates/plate-25.jpg","intro": "This is a collection of various Nike store & workplace exteriors, interiors, temporary installations, and signage from the late 1980s to the late 2000s.","caps": ["From the AIGA Design Archives - Nike 'Genealogy of Speed’ exhibition (2004)","From the website of Aukett + Heese Architects - Interior of the Nike Kids section at NikeTown Berlin","From the website of Aukett + Heese Architects - Interior of NikeTown Berlin (1999)","From Graphic Design USA 17 - Interior of the Women’s Pavilion in NikeTown Atlanta (1993)","From the August 1991 issue of VM&SD Magazine - All Conditions Gear (ACG) Pavilion in NikeTown Portland (1990)","From the November 1992 issue of Interiors Magazine - Interior of NikeTown Chicago (1992)","From the November 1992 issue of Interiors Magazine - Interior of the International Pavilion at NikeTown Chicago (1992)","From Stores of the Year 6 (1991) - Interior of the Aqua Gear area in NikeTown Portland (1990)","From Designing Entrances for Retail & Restaurant Spaces - Exterior of NikeTown Seattle","From the March 1997 issue of Architectural Record - Floor educational exhibits on Nike’s women’s shoes line inside NikeTown NYC","From American Shopping Centers 2 - Exterior of the NikeTown store in Triangle Square shopping center, Costa Mesa, CA","From Graphics Alive 2 - Exhibition on the development & history of Nike Running at Showroom 1948 in Shoreditch, London","From New Retail by Rasshied Din - Exterior of NikeTown NYC (1996)","From New Retail by Rasshied Din - Central display in the ‘Town Square’ area of NikeTown London","From Retail Entertainment (1998) - Interactive display inside NikeTown NYC","From Brandscaping - Worlds of Experience in Retail Design - ‘Chandelier’ exhibit inside the central display area in the ‘Town Square’ area of NikeTown London","From Brandscaping - Worlds of Experience in Retail Design - Footwear display and seating area inside NikeTown London","From Shop! Best of Store Design - Interior of Nike ID Design Studio - New York City","From Shopping Architecture Now - 1 by Taschen - Central display within the Harajuku Nike Flagship Store - Tokyo, Japan (2009)","From the website of Aukett + Heese Architects - Nike Air Lock display in NikeTown Berlin (1999)","From the website of Aukett + Heese Architects - Interior of NikeTown Berlin (1999)","From Graphic Design USA 17 - Environmental design of the Nike Super Show Atlanta 1996 installation (1996)","From Graphic Design USA 17 - Environmental design of the Nike Super Show Atlanta 1996 installation (1996)","From Graphic Design USA 17 - Environmental design of the Nike Super Show Atlanta 1996 installation (1996)","From the August 1991 issue of VM&SD Magazine - Exterior of NikeTown Portland (1990)","From the August 1991 issue of VM&SD Magazine - Challenge Court Pavilion for tennis in NikeTown Portland (1990)","From the November 1992 issue of Interiors Magazine - The Nike Kids pavilion inside NikeTown Chicago (1992)","From the November 1992 issue of Interiors Magazine - Aquatic sportswear and shoe pavilion inside NikeTown Chicago (1992)","From Stores of the Year 6 (1991) - Town square area, showing the various pavilions in NikeTown Portland (1990)","From Stores of the Year 6 (1991) - All Conditions Gear (ACG) Pavilion in NikeTown Portland (1990)","From American Shopping Centers 2 - Night time exterior view of the NikeTown store in Triangle Square shopping center, Costa Mesa, CA","From New Retail by Rasshied Din - Men’s running section inside NikeTown London","From New Retail by Rasshied Din - Town square area inside NikeTown London","From the April 1997 issue of Interiors Magazine - Nike Golf section inside NikeTown NYC (1996)","From Brandscaping - Worlds of Experience in Retail Design - World Championship Ball Monument at NikePark Paris (1998)","From Brandscaping - Worlds of Experience in Retail Design - Fountain and championship locations billboard at NikePark Paris (1998)","From Retail Therapy: Store Design Today (2007) - Exterior entry of Nike Women Fashion Island - Newport Beach, CA","From Retail Therapy: Store Design Today (2007) - Interior of Nike Women Fashion Island - Newport Beach, CA","From Shopping Architecture Now - 1 by Taschen - Motorized runner’s numbers display within the Harajuku Nike Flagship Store - Tokyo, Japan (2009)"]},{"id": "merchandise","n": 2,"name": "Merchandise","dir": "plates2","cover": "plates2/cover.jpg","intro": "This is a collection of various Nike products, shoes, clothing, packaging, shopping bags, and point of purchase displays from the late 1980s to the late 2000s.","caps": ["From the AIGA Design Archives - Kids Sign NikeTown Orange County","From Graphic Idea Resource - Color - Building Great Designs with Color - NikeTown holiday ‘94 shopping bag (1994)","From Graphis Design Annual 2003 - Nike sunglasses and packaging","From Marketing By Design - POP display for men’s casual Nikes","From the August 1991 issue of VM&SD Magazine - POP display for the Nike children’s line","From Graphis Packaging 1989 - packaging shoe box for the Nike Aqua Sock","From Point of Purchase Design Annual 8 2001 - NikeTown ‘snowflakes’ pendant decorations","From Point of Purchase Design Annual 7 2000 - Nike Kids Display","From Point of Purchase Design Annual 4 1996 - Nike Kids’ Shoe Display","From World's Best Creative POP Displays Vol. 1 - 1995 Nike Air 180 display","From Visual Merchandising 4 - Nike Vision & Timing displays for Nike Canada (Toronto)","From World's Best Creative POP Displays Vol. 2 - 1999 Nike Retro Display","From T-Shirt Print Design and Logos - Back of 1992 Nike Air Jordan T-Shirt","From T-Shirt Print Design and Logos - 1993 Nike Just Do It T-Shirt","From T-Shirt Print Design and Logos - 1993 Nike Just Do It T-Shirt","From ‘Innovation IDSA’ 1998 - Nike Timecapsule for Nike Triax watches","From a 1993 issue of Graphis Magazine - Nike Aqua Gear ‘fishtank’ display in NikeTown Portland (1990)","From Graphis Design 1998 - Nike Fitwrap Customization POP display","From Point of Purchase Design Annual 2 - Nike POP display for the Nike Air Huarache Plus","From Shopping Bag Design 2 by Rockport Publishers - NikeTown spring ‘94 shopping bag (1994)","From Point of Purchase Design Annual 2 - Spring 1993 Sandal Pak POP display (1993)","From Point of Purchase Design Annual 2 - Nike Categorical Fixture Program (1993)","From Graphis Design 1998 - Nike shoebox","From World's Best Creative POP Displays Vol. 2 - Nike Shox POP display (2000)","From Retail Entertainment - ‘N Gage’ digital sizing kiosk inside NikeTown NYC (1996)","From the Packaging Designer’s Bible - Nike Presto, Spirit of the Movement DVD (2002)","From Point of Purchase Design Annual 2 - Nike Holiday ‘92 Flight POP display","From IDEO: Masters in Innovation - image of sunglasses, part of a line of all-terrain eyewear designed for Nike","From Graphis Design 1998 - Nike sunglasses display case","From American Corporate Identity 2000 - Nike Cup tennis hat","From T-Shirt Print Design and Logos - 1993 Nike ‘Don’t Rush’ T-Shirt","From Visual Merchandising 4 - Nike Vision & Timing displays for Nike Canada (Toronto)","From Visual Merchandising 3 - Nike Kids fixture display for the store, VF Playwear","From World's Best Creative POP Displays Vol. 1 - Nike Kids display (1995)","From World's Best Creative POP Displays Vol. 1 - Nike Kids display (1995)","From Point of Purchase Design Annual 4 1996 - Nike F.I.T. Display","From Marketing By Design - Nike-Air POP display","From Graphis Packaging 1989 - packaging shoe box for the Nike Aqua Boot","From the website, visla.kr - Nike Air Huarache display (1993)"]},{"id": "graphics","n": 3,"name": "Graphics","dir": "plates3","cover": "plates3/plate-01.jpg","intro": "This is a collection of various Nike graphic design, websites, brochures, logos, typography, stills of motion graphics, and commercials from the late 1980s to the late 2000s.","caps": ["From the AIGA Design Archives - Nike NYC Graffiti Walls by Dan Wieden (1995)","From the website of designer Takenobu Igarashi - Nike “180” sculpture used in various advertisements (1990)","From Type in Motion (1999) - Motion graphics stills of the video played at the roll-out party of the Nike Air Haze shoe (1996)","From a 1998 issue of IDEA Magazine - front of a leaflet for Nike Running, created by Wieden+Kennedy Amsterdam","From Graphis Poster 93 - poster for the 20th annual Portland Marathon (1991)","From Graphis Poster 92 - invitation to the opening of the first NikeTown store in Portland, OR, represented through a manhole cover located in the ‘town square’ of the NikeTown","From New American Logo - Logo for the 1993 Nike World Premier Retail awards dinner","From New American Logo - Logo for Nike infants footwear & apparel (1993)","From Freestyle Graphics (2009) - posters for ‘Madrunning - 30 Years of Running in Madrid’ (Dec. 2006)","From IdN Magazine - Extra 01 Cut and Paste issue (2009) - A Piece of Street 2005 - Nike and Mr. Lau Mr. Shoe sample (poster)","From Graphis Design 98 - Poster for the opening of NikeTown NYC (1996)","From Graphis Design 98 - Poster for the opening of NikeTown NYC (1996)","From Graphis Design 98 - Poster for the opening of NikeTown NYC (1996)","From Graphis Design 98 - Poster for the opening of NikeTown NYC (1996)","From Graphis Poster 96 - Poster for Nike Women","From New Retro: Classic Graphics, Today's Designs - ‘Nike Basketball’ illustration poster to celebrate 30 years of Nike basketball shoes","From Lowfat: A Visual Journey Taking You to 96 Hot Motion Graphic Destinations - Motion graphics stills from a commercial for Nike Presto, by Wieden+Kennedy Tokyo (2003)","From Typography 18 - Logo for Nike Form","From the AIGA Design Archives - ‘My Life as a 10’ website","From the AIGA Design Archives - MBF/Man’s Best Friend graphic for Nike ACG (1994)","From the AIGA Design Archives - “Just Do It” braille poster (1993)","From the AIGA Design Archives - Nike 180 Poster (1991)","From the AIGA Design Archives - Cover of the 1992 Nike Annual Report","From the AIGA Design Archives - Nike “NYC” Graffiti Figures (1995)","From a 1998 issue of IDEA Magazine - poster/advertisement for Nike Air Vapor","From a 1998 issue of IDEA Magazine - ‘Do Running’ poster for an event titled ‘Rave Run Party’ on Sept. 21, 1997","From Brochure Design Forum 3 - Nike Italy - Retail Resources Brochure (1995)","From a 1998 issue of IDEA Magazine - back of a leaflet for Nike Running, created by Wieden+Kennedy Amsterdam","From a 1998 issue of IDEA Magazine - Dam tot Dam Loop97 advertisement, and ‘Do Running’ tram wrap advertisement","From Graphis Poster 1996 - outdoor snowboarding poster for Nike ACG","From Freestyle Graphics (2009) - posters for ‘Madrunning - 30 Years of Running in Madrid’ (Dec. 2006)","From Freestyle Graphics (2009) - posters for ‘Madrunning - 30 Years of Running in Madrid’ (Dec. 2006)","From New Retro: Classic Graphics, Today's Designs - promotional material for the limited edition Nike White Label series","From Typography 17 - promotional materials for the Nike F.I.T. line","From Iconography 2: Life - various graphics for Nike apparel by Andy Walker","From Iconography 2: Life - various graphics for Nike apparel by Andy Walker","From Iconography 2: Life - various graphics for Nike apparel by Andy Walker","From Iconography 2: Life - various graphics for Nike apparel by Andy Walker"]}];
+
+function pad(n){return String(n).padStart(2,'0')}
+function src(g,n){return g.dir+'/plate-'+pad(n)+'.jpg'}
+function el(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;
+  if(txt!=null)e.textContent=txt;return e}
+
+/* ---------- contents ---------- */
+var toc=document.getElementById('toc');
+GALLERIES.forEach(function(g){
+  var li=document.createElement('li'),b=el('button','card');
+  var th=el('span','thumb'),im=new Image();
+  im.src=g.cover;im.alt='';im.loading='lazy';
+  th.appendChild(im);
+  b.appendChild(th);
+  var hd=el('div','cardhd');
+  hd.appendChild(el('span','g-label','Gallery '+pad(g.n)));
+  hd.appendChild(el('h2',null,g.name));
+  b.appendChild(hd);
+  b.appendChild(el('p','sub',g.intro));
+  b.appendChild(el('span','cta','\u2192'));
+  b.addEventListener('click',function(){open_(g.id)});
+  li.appendChild(b);toc.appendChild(li);
+});
+
+/* ---------- slideshow ---------- */
+var film=document.getElementById('film'),stage=document.getElementById('fStage'),
+    headEl=document.getElementById('fHead'),railEl=document.getElementById('fRail'),
+    nameEl=document.getElementById('fName'),progEl=document.getElementById('fProg'),
+    live=document.getElementById('live'),
+    zLb=document.getElementById('zL'),zRb=document.getElementById('zR');
+var G=null,i=0,lastFocus=null,imgEl=null,titleEl=null;
+
+function render(dir){
+  var tot=G.caps.length;
+  film.style.setProperty('--dx',(dir<0?-26:26)+'px');
+  if(imgEl){imgEl.remove();imgEl=null}
+  if(titleEl){titleEl.remove();titleEl=null}
+  headEl.innerHTML='';
+
+  if(i===0){
+    titleEl=el('div','f-title');
+    titleEl.appendChild(el('span','n','Gallery '+pad(g_n())));
+    titleEl.appendChild(el('h2',null,G.name));
+    titleEl.appendChild(el('p',null,G.intro));
+    titleEl.appendChild(el('span','hint','Press \u2192 to swipe through'));
+    stage.insertBefore(titleEl,stage.firstChild);
+  }else{
+    var cap=G.caps[i-1];
+    imgEl=new Image();
+    imgEl.src=src(G,i);
+    imgEl.alt=cap;
+    stage.insertBefore(imgEl,stage.firstChild);
+    headEl.appendChild(el('p',null,cap));
+  }
+
+  zLb.hidden=(i===0);zRb.hidden=(i>=tot);
+  film.classList.remove('go');void film.offsetWidth;film.classList.add('go');
+  progEl.innerHTML='';
+  for(var k=1;k<=tot;k++){var b=document.createElement('i');if(k<=i)b.className='on';progEl.appendChild(b)}
+  [].forEach.call(railEl.children,function(btn,k){btn.setAttribute('aria-current',String(k===i))});
+  var cur=railEl.children[i];
+  if(cur&&cur.scrollIntoView)cur.scrollIntoView({block:'nearest',inline:'nearest'});
+  live.textContent=i===0?G.name+' \u2014 title slide. '+tot+' plates.'
+    :G.name+', plate '+i+' of '+tot+'. '+G.caps[i-1];
+}
+function g_n(){return G.n}
+
+function buildRail(){
+  railEl.innerHTML='';
+  var t=document.createElement('button'),ti=new Image();
+  ti.src=G.cover;ti.alt='';t.appendChild(ti);
+  t.setAttribute('aria-label','Title slide');
+  t.addEventListener('click',function(){go(0)});
+  railEl.appendChild(t);
+  G.caps.forEach(function(cap,k){
+    var b=document.createElement('button'),im=new Image();
+    im.src=src(G,k+1);im.alt='';im.loading='lazy';
+    b.appendChild(im);
+    b.setAttribute('aria-label','Plate '+(k+1)+' of '+G.caps.length);
+    b.addEventListener('click',function(){go(k+1)});
+    railEl.appendChild(b);
+  });
+}
+function go(n){var d=n>i?1:-1;i=n;render(d)}
+function step(d){
+  var tot=G.caps.length;
+  if(d>0&&i>=tot)return;
+  if(d<0&&i<=0)return;
+  i+=d;render(d);
+}
+
+function open_(id){
+  var g=GALLERIES.filter(function(x){return x.id===id})[0];
+  if(!g)return;
+  lastFocus=document.activeElement;
+  G=g;i=0;
+  nameEl.textContent='Gallery '+pad(g.n)+' \u2014 '+g.name;
+  buildRail();render(1);
+  film.hidden=false;document.body.classList.add('reading');
+  try{document.getElementById('cover').inert=true}catch(e){}
+  if(location.hash.slice(1)!==id)history.replaceState(null,'','#'+id);
+  film.focus();
+  g.caps.forEach(function(c,k){if(k<8)(new Image()).src=src(g,k+1)});
+}
+function close_(){
+  film.hidden=true;document.body.classList.remove('reading');G=null;
+  try{document.getElementById('cover').inert=false}catch(e){}
+  if(location.hash)history.replaceState(null,'','#cover');
+  if(lastFocus&&lastFocus.focus)lastFocus.focus();
+}
+document.getElementById('fClose').addEventListener('click',close_);
+document.getElementById('fHome').addEventListener('click',close_);
+var coverLogo=document.querySelector('a.logo');
+if(coverLogo)coverLogo.addEventListener('click',function(){
+  if(!film.hidden)close_();
+  try{window.scrollTo({top:0,behavior:'smooth'})}catch(e){window.scrollTo(0,0)}
+});
+document.getElementById('zL').addEventListener('click',function(){if(Date.now()-swipeAt<400)return;step(-1)});
+document.getElementById('zR').addEventListener('click',function(){if(Date.now()-swipeAt<400)return;step(1)});
+
+document.addEventListener('keydown',function(e){
+  if(film.hidden)return;
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();step(1)}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();step(-1)}
+  else if(e.key==='Escape'){e.preventDefault();close_()}
+  else if(e.key==='Home'){e.preventDefault();go(0)}
+  else if(e.key==='End'){e.preventDefault();go(G.caps.length)}
+});
+var tx=0,ty=0,swipeAt=0;
+function swipeStart(e){var t=e.touches[0];tx=t.clientX;ty=t.clientY}
+function swipeEnd(e){
+  var t=e.changedTouches[0],dx=t.clientX-tx,dy=t.clientY-ty;
+  if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.2){
+    swipeAt=Date.now();          // so the tap zone under the finger does not fire too
+    step(dx<0?1:-1);
+  }
+}
+/* listen on the whole slideshow, not just the stage, so a swipe that starts on
+   the caption or the padding still counts */
+film.addEventListener('touchstart',swipeStart,{passive:true});
+film.addEventListener('touchend',swipeEnd,{passive:true});
+
+function route(){
+  var h=location.hash.replace('#','');
+  if(h&&h!=='cover'&&GALLERIES.some(function(g){return g.id===h}))open_(h);
+  else if(!film.hidden)close_();
+}
+window.addEventListener('hashchange',route);
+if(location.hash&&location.hash!=='#cover')route();
+</script>

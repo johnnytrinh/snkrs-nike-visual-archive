@@ -1,0 +1,72 @@
+# SNKRS Architectural
+
+An interactive e-magazine of the Nike Visual Archive — the SNKRS content thread
+curated by Evan Collins and the Consumer Aesthetics Research Institute (CARI).
+A cover with three galleries, each opening into a full-screen slideshow of
+archival plates with their captions as published.
+
+116 plates across three galleries:
+
+| Gallery | Subject | Plates |
+|---|---|---|
+| 01 | Architectural | 39 |
+| 02 | Merchandise | 39 |
+| 03 | Graphics | 38 |
+
+## Layout
+
+```
+index.html              the whole magazine: markup, styles, data, behaviour
+plates/                 Gallery 01 plates (plate-01.jpg … plate-39.jpg)
+plates2/                Gallery 02 plates, plus cover.jpg
+plates3/                Gallery 03 plates
+hero-visual-archive.jpg cover hero
+build-pages.sh          builds docs/ for GitHub Pages
+```
+
+No build step, no dependencies, no framework. The only external request is a
+Google Fonts stylesheet.
+
+## Hosting on GitHub Pages
+
+`index.html` is authored for Claude Artifacts, which wraps it in a document
+shell (doctype, charset, viewport meta, a small reset) when publishing. Served
+raw it would render in **quirks mode with no viewport meta**, so mobile would
+not scale. `build-pages.sh` adds an equivalent shell:
+
+```sh
+./build-pages.sh          # writes docs/ (~9.7 MB)
+```
+
+Then in the repo: **Settings → Pages → Source: Deploy from a branch**, branch
+`main`, folder `/docs`.
+
+Notes:
+
+- Every path in the page is relative, so it works from a project subpath
+  (`username.github.io/snkrs-emagazine/`) as well as a custom domain.
+- `docs/.nojekyll` keeps Pages from running the files through Jekyll.
+- ~9.7 MB total, against a 1 GB soft limit and 100 MB per file. Fine.
+- A free Pages site must be in a public repo. Private repos need a paid plan.
+- Re-run `build-pages.sh` after editing `index.html`; `docs/` is generated and
+  should not be edited directly.
+
+## Before publishing it publicly
+
+The plates are Nike's copyrighted images, scanned from trade press, and the
+SNKRS wordmark is Nike's trademark. That is fine for a private artifact or a
+local copy. Putting it on a public URL republishes all of it, so treat this as
+a personal study rather than something to promote, or swap the imagery for
+material you hold the rights to.
+
+## Source
+
+Every plate, caption and credit comes from the SNKRS content thread
+"Nike Visual Archive" by Evan Collins:
+
+- <https://www.nike.com/launch/t/content-thread-editorial-evan-collins-cari>
+- Gallery 1 — Architectural: `…-cari-gallery-1`
+- Gallery 2 — Merchandise: `…-cari-gallery-2-us`
+- Gallery 3 — Graphics: `…-cari-gallery-3`
+
+Captions are reproduced verbatim, in the order the source thread presents them.
